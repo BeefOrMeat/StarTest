@@ -140,7 +140,6 @@ public class LineMaker : MonoBehaviour
             mSelectedStar = mFocusedStar;
             return;
         }
-
         return;
     }
     
@@ -154,8 +153,20 @@ public class LineMaker : MonoBehaviour
         {
             return;
         }
+        if (mFocusedLine != null && Input.GetMouseButtonDown(1))
+        {
+            Destroy(mFocusedLine);
+            mFocusedLine = null;
+            return;
+        }
         if (hit.collider.transform == mNextLine)
         {
+            if (mFocusedLine != null)
+            {
+                Line oldFocusedLineScript = mFocusedLine.GetComponent<Line>();
+                oldFocusedLineScript.OnReleased();
+                mFocusedLine = null;
+            }
             return;
         }
         if (mFocusedLine != hit.collider.gameObject)
@@ -168,15 +179,6 @@ public class LineMaker : MonoBehaviour
             mFocusedLine = hit.collider.gameObject;
             Line focusedLineScript = mFocusedLine.GetComponent<Line>();
             focusedLineScript.OnFocused();
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Destroy(mFocusedLine);
-            return;
-        }
-        else
-        {
-
         }
         return;
     }

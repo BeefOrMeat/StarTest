@@ -67,7 +67,8 @@ public class StarGenerator : MonoBehaviour
         }
     }
 	
-	void Update () {
+	void Update ()
+    {
 		
 	}
 }

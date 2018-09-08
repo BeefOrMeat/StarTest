@@ -294,7 +294,7 @@ MonoBehaviour:
   mLinePrefab: {fileID: 4465323785528026, guid: f51b04bd839ed9a4ca2cd71d42f66ec2,
     type: 2}
   mLineWidth: 0.25
-  mLineColliderWidthRate: 1
+  mLineColliderWidthRate: 10
   mXReverse: 0
   mYReverse: 0
 --- !u!1 &668485332
