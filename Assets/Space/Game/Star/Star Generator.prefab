@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mStarCount: 500
-  mStarColliderRadius: 50
+  mStarColliderRadius: 10
   mRadius: 100
   mStarPrefab: {fileID: 4508652521449928, guid: 1230d5216d3485a4d9b7f97f8e15faf2,
     type: 2}
