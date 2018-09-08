@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 135652643688750248}
   - component: {fileID: 23999810671632600}
   - component: {fileID: 114701984167368808}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c05f98c420cb79d4a95404acea7d80bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mDefaultMaterial: {fileID: 2100000, guid: f5f86849d53f51146a5bfe67256e5695, type: 2}
+  mSelectedMaterial: {fileID: 2100000, guid: 86815cc484c14fb42852fa402c848403, type: 2}
+  mFocusedMaterial: {fileID: 2100000, guid: 7c5c1caed541ab74180425d325092352, type: 2}
 --- !u!135 &135652643688750248
 SphereCollider:
   m_ObjectHideFlags: 1

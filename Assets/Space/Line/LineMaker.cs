@@ -8,7 +8,9 @@ public class LineMaker : MonoBehaviour
     private Transform mLinePrefab;
 
     [SerializeField]
-    private float mLineWidth;
+    private float mLineWidth = 0.5f;
+    [SerializeField]
+    private float mLineColliderWidthRate = 1.0f;
 
     [SerializeField]
     private bool mXReverse = false;
@@ -21,14 +23,17 @@ public class LineMaker : MonoBehaviour
 
     private Vector3 mOldMousePosition;
 
+    private Transform mNextLine;
+    private GameObject mFocusedLine;
+
     private Camera mCamera;
 
     private int mStarLayerMask;
 
     private int mLineLayerMask;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         mCamera = GetComponent<Camera>();
         int starLayerNo = LayerMask.NameToLayer("Star");
@@ -53,22 +58,11 @@ public class LineMaker : MonoBehaviour
         }
         transform.Rotate(new Vector3(move.y, move.x, 0.0f));
 
-        bool use = false;
-        if (!use)
-        {
-            use = AddLineProcess();
-        }
-        if (!use)
-        {
-            use = RemoveLineProcess();
-        }
+        AddLineProcess();
+        RemoveLineProcess();
     }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>操作が行われればtrue</returns>
-    bool AddLineProcess()
+
+    void AddLineProcess()
     {
         Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
@@ -82,18 +76,12 @@ public class LineMaker : MonoBehaviour
                 focusedStarScript.OnReleased();
                 mFocusedStar = null;
             }
-            return false;
+            return;
         }
 
         //視点の先の星をフォーカスされた星に
         GameObject newFocusedStar = hit.collider.gameObject;
         Star newFocusedStarScript = newFocusedStar.GetComponent<Star>();
-
-        //フォーカスされた星が選択状態だったら処理しない
-        if (mSelectedStar == newFocusedStar)
-        {
-            return true;
-        }
 
         //フォーカスされた星が切り替わった時
         if (newFocusedStar != mFocusedStar)
@@ -107,37 +95,56 @@ public class LineMaker : MonoBehaviour
             //フォーカスされた星をフォーカス状態に
             newFocusedStarScript.OnFocused();
             mFocusedStar = newFocusedStar;
+
+            if (mNextLine == null)
+            {
+                mNextLine = Instantiate(mLinePrefab);
+                Line nextLineScript = mNextLine.GetComponent<Line>();
+                nextLineScript.LineWidth = mLineWidth;
+                nextLineScript.LineColliderWidthRate = mLineColliderWidthRate;
+            }
+            mNextLine.gameObject.SetActive(true);
+            if (mSelectedStar)
+            {
+                float distance = Vector3.Distance(mFocusedStar.transform.position, mSelectedStar.transform.position);
+                mNextLine.position = mSelectedStar.transform.position;
+                mNextLine.localScale = new Vector3(mNextLine.localScale.x, mNextLine.localScale.y, distance);
+                mNextLine.LookAt(mFocusedStar.transform.position);
+                mNextLine.Translate(new Vector3(0, 0, distance * 0.5f));
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+            //選択状態の星を選択した場合連結を解除
+            if (mSelectedStar == newFocusedStar)
+            {
+                Star selectedStarScript = mSelectedStar.GetComponent<Star>();
+                selectedStarScript.OnReleased();
+                mSelectedStar = null;
+                if (mNextLine != null)
+                {
+                    mNextLine.gameObject.SetActive(false);
+                }
+                return;
+            }
             //選択している星があれば線を作成
             if (mSelectedStar != null)
             {
                 Star selectedStarScript = mSelectedStar.GetComponent<Star>();
                 selectedStarScript.OnReleased();
-
-                float distance = Vector3.Distance(mFocusedStar.transform.position, mSelectedStar.transform.position);
-                Transform line = Instantiate(mLinePrefab);
-                line.position = mSelectedStar.transform.position;
-                line.localScale = new Vector3(mLineWidth, mLineWidth, distance);
-                line.LookAt(mFocusedStar.transform.position);
-                line.Translate(new Vector3(0, 0, distance * 0.5f));
+                mNextLine = null;
             }
             newFocusedStarScript.OnSelected();
 
             mSelectedStar = mFocusedStar;
-            return true;
+            return;
         }
 
-        return false;
+        return;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>操作が行われればtrue</returns>
-    bool RemoveLineProcess()
+    
+    void RemoveLineProcess()
     {
         Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
@@ -145,17 +152,32 @@ public class LineMaker : MonoBehaviour
         //視点の先に線があれば
         if (!Physics.Raycast(ray, out hit, 10000, mLineLayerMask))
         {
-            return false;
+            return;
         }
-        if (Input.GetMouseButtonDown(0))
+        if (hit.collider.transform == mNextLine)
         {
-            Destroy(hit.collider.gameObject);
-            return true;
+            return;
+        }
+        if (mFocusedLine != hit.collider.gameObject)
+        {
+            if (mFocusedLine != null)
+            {
+                Line oldFocusedLineScript = mFocusedLine.GetComponent<Line>();
+                oldFocusedLineScript.OnReleased();
+            }
+            mFocusedLine = hit.collider.gameObject;
+            Line focusedLineScript = mFocusedLine.GetComponent<Line>();
+            focusedLineScript.OnFocused();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Destroy(mFocusedLine);
+            return;
         }
         else
         {
 
         }
-        return true;
+        return;
     }
 }

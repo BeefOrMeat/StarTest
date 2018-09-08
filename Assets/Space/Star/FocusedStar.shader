@@ -42,8 +42,9 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
         fixed4 col = _Color;
-        col.rgb *= sin(_Time.x);
-				return col;
+        float t = (sin(_Time.w * 10.0f) + 1.0f) * 0.5f;
+        col.rgb += (1.0f - col.rgb) * t;
+        return col;
 			}
 			ENDCG
 		}
