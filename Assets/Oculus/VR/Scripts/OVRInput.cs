@@ -236,13 +236,6 @@ public static class OVRInput
 		All                       = OVRPlugin.Controller.All,            ///< Represents the logical OR of all controllers.
 	}
 
-	public enum Handedness
-	{
-		Unsupported	              = OVRPlugin.Handedness.Unsupported,
-		LeftHanded                = OVRPlugin.Handedness.LeftHanded,
-		RightHanded               = OVRPlugin.Handedness.RightHanded,
-	}
-
 	private static readonly float AXIS_AS_BUTTON_THRESHOLD = 0.5f;
 	private static readonly float AXIS_DEADZONE_THRESHOLD = 0.2f;
 	private static List<OVRControllerBase> controllers;
@@ -285,9 +278,6 @@ public static class OVRInput
 			new OVRControllerTouchpad(),
 			new OVRControllerLTrackedRemote(),
 			new OVRControllerRTrackedRemote(),
-			new OVRControllerTouch(),
-			new OVRControllerLTouch(),
-			new OVRControllerRTouch(),
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
 			new OVRControllerGamepadMac(),
 #else
@@ -330,11 +320,8 @@ public static class OVRInput
 
 		if ((activeControllerType == Controller.LTouch) || (activeControllerType == Controller.RTouch))
 		{
-			if ((connectedControllerTypes & Controller.Touch) == Controller.Touch)
-			{
-				// If either Touch controller is Active and both Touch controllers are connected, set both to Active.
-				activeControllerType = Controller.Touch;
-			}
+			// If either Touch controller is Active, set both to Active.
+			activeControllerType = Controller.Touch;
 		}
 
 		if ((connectedControllerTypes & activeControllerType) == 0)
@@ -526,14 +513,6 @@ public static class OVRInput
 		default:
 			return Vector3.zero;
 		}
-	}
-
-	/// <summary>
-	/// Gets the dominant hand that the user has specified in settings, for mobile devices.
-	/// </summary>
-	public static Handedness GetDominantHand()
-	{
-		return (Handedness) OVRPlugin.GetDominantHand();
 	}
 
 	/// <summary>
@@ -1770,25 +1749,6 @@ public static class OVRInput
 			axis2DMap.SecondaryThumbstick       = RawAxis2D.RThumbstick;
 			axis2DMap.SecondaryTouchpad         = RawAxis2D.None;
 		}
-
-		public override bool WasRecentered()
-		{
-			return ((currentState.LRecenterCount + currentState.RRecenterCount) != (previousState.LRecenterCount + previousState.RRecenterCount));
-		}
-
-		public override byte GetRecenterCount()
-		{
-			return (byte)(currentState.LRecenterCount + currentState.RRecenterCount);
-		}
-
-		public override byte GetBatteryPercentRemaining()
-		{
-			byte leftBattery = currentState.LBatteryPercentRemaining;
-			byte rightBattery = currentState.RBatteryPercentRemaining;
-			byte minBattery = (leftBattery <= rightBattery) ? leftBattery : rightBattery;
-
-			return minBattery;
-		}
 	}
 
 	private class OVRControllerLTouch : OVRControllerBase
@@ -1878,21 +1838,6 @@ public static class OVRInput
 			axis2DMap.SecondaryThumbstick       = RawAxis2D.None;
 			axis2DMap.SecondaryTouchpad         = RawAxis2D.None;
 		}
-
-		public override bool WasRecentered()
-		{
-			return (currentState.LRecenterCount != previousState.LRecenterCount);
-		}
-
-		public override byte GetRecenterCount()
-		{
-			return currentState.LRecenterCount;
-		}
-
-		public override byte GetBatteryPercentRemaining()
-		{
-			return currentState.LBatteryPercentRemaining;
-		}
 	}
 
 	private class OVRControllerRTouch : OVRControllerBase
@@ -1981,21 +1926,6 @@ public static class OVRInput
 			axis2DMap.PrimaryTouchpad           = RawAxis2D.None;
 			axis2DMap.SecondaryThumbstick       = RawAxis2D.None;
 			axis2DMap.SecondaryTouchpad         = RawAxis2D.None;
-		}
-
-		public override bool WasRecentered()
-		{
-			return (currentState.RRecenterCount != previousState.RRecenterCount);
-		}
-
-		public override byte GetRecenterCount()
-		{
-			return currentState.RRecenterCount;
-		}
-
-		public override byte GetBatteryPercentRemaining()
-		{
-			return currentState.RBatteryPercentRemaining;
 		}
 	}
 

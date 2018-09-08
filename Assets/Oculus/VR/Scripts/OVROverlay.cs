@@ -79,31 +79,21 @@ public class OVROverlay : MonoBehaviour
 	/// <summary>
 	/// Specify overlay's type
 	/// </summary>
-	[Tooltip("Specify overlay's type")]
 	public OverlayType currentOverlayType = OverlayType.Overlay;
 
 	/// <summary>
 	/// If true, the texture's content is copied to the compositor each frame.
 	/// </summary>
-	[Tooltip("If true, the texture's content is copied to the compositor each frame.")]
 	public bool isDynamic = false;
 
 	/// <summary>
 	/// If true, the layer would be used to present protected content (e.g. HDCP). The flag is effective only on PC.
 	/// </summary>
-	[Tooltip("If true, the layer would be used to present protected content (e.g. HDCP). The flag is effective only on PC.")]
 	public bool isProtectedContent = false;
-
-	/// <summary>
-	/// The compositionDepth defines the order of the OVROverlays in composition. The overlay/underlay with smaller compositionDepth would be composited in the front of the overlay/underlay with larger compositionDepth.
-	/// </summary>
-	[Tooltip("The compositionDepth defines the order of the OVROverlays in composition. The overlay/underlay with smaller compositionDepth would be composited in the front of the overlay/underlay with larger compositionDepth.")]
-	public int compositionDepth = 0;
 
 	/// <summary>
 	/// Specify overlay's shape
 	/// </summary>
-	[Tooltip("Specify overlay's shape")]
 	public OverlayShape currentOverlayShape = OverlayShape.Quad;
 	private OverlayShape prevOverlayShape = OverlayShape.Quad;
 
@@ -111,7 +101,6 @@ public class OVROverlay : MonoBehaviour
 	/// The left- and right-eye Textures to show in the layer.
 	/// \note If you need to change the texture on a per-frame basis, please use OverrideOverlayTextureInfo(..) to avoid caching issues.
 	/// </summary>
-	[Tooltip("The left- and right-eye Textures to show in the layer.")]
 	public Texture[] textures = new Texture[] { null, null };
 
 	protected IntPtr[] texturePtrs = new IntPtr[] { IntPtr.Zero, IntPtr.Zero };
@@ -220,7 +209,7 @@ public class OVROverlay : MonoBehaviour
 			return false;
 
 		OVRPlugin.LayerDesc desc = OVRPlugin.CalculateLayerDesc(shape, layout, size, mipLevels, sampleCount, etFormat, flags);
-		OVRPlugin.EnqueueSetupLayer(desc, compositionDepth, layerIdPtr);
+		OVRPlugin.EnqueueSetupLayer(desc, layerIdPtr);
 		layerId = (int)layerIdHandle.Target;
 
 		if (layerId > 0)

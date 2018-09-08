@@ -125,7 +125,6 @@ public static class OVRHaptics
 		}
 
 		private bool m_lowLatencyMode = true;
-		private bool m_paddingEnabled = true;
 		private int m_prevSamplesQueued = 0;
 		private float m_prevSamplesQueuedTime = 0;
 		private int m_numPredictionHits = 0;
@@ -138,9 +137,6 @@ public static class OVRHaptics
 
 		public OVRHapticsOutput(uint controller)
 		{
-#if UNITY_ANDROID
-			m_paddingEnabled = false;
-#endif
 			m_controller = controller;
 		}
 
@@ -227,23 +223,20 @@ public static class OVRHaptics
 					m_pendingClips.RemoveAt(i);
 			}
 
-			if (m_paddingEnabled)
+			int desiredPadding = desiredSamplesCount - (hapticsState.SamplesQueued + acquiredSamplesCount);
+			if (desiredPadding < (OVRHaptics.Config.MinimumBufferSamplesCount - acquiredSamplesCount))
+				desiredPadding = (OVRHaptics.Config.MinimumBufferSamplesCount - acquiredSamplesCount);
+			if (desiredPadding > hapticsState.SamplesAvailable)
+				desiredPadding = hapticsState.SamplesAvailable;
+
+			if (desiredPadding > 0)
 			{
-				int desiredPadding = desiredSamplesCount - (hapticsState.SamplesQueued + acquiredSamplesCount);
-				if (desiredPadding < (OVRHaptics.Config.MinimumBufferSamplesCount - acquiredSamplesCount))
-					desiredPadding = (OVRHaptics.Config.MinimumBufferSamplesCount - acquiredSamplesCount);
-				if (desiredPadding > hapticsState.SamplesAvailable)
-					desiredPadding = hapticsState.SamplesAvailable;
+				int numBytes = desiredPadding * OVRHaptics.Config.SampleSizeInBytes;
+				int dstOffset = acquiredSamplesCount * OVRHaptics.Config.SampleSizeInBytes;
+				int srcOffset = 0;
+				Marshal.Copy(m_paddingClip.Samples, srcOffset, m_nativeBuffer.GetPointer(dstOffset), numBytes);
 
-				if (desiredPadding > 0)
-				{
-					int numBytes = desiredPadding * OVRHaptics.Config.SampleSizeInBytes;
-					int dstOffset = acquiredSamplesCount * OVRHaptics.Config.SampleSizeInBytes;
-					int srcOffset = 0;
-					Marshal.Copy(m_paddingClip.Samples, srcOffset, m_nativeBuffer.GetPointer(dstOffset), numBytes);
-
-					acquiredSamplesCount += desiredPadding;
-				}
+				acquiredSamplesCount += desiredPadding;
 			}
 
 			if (acquiredSamplesCount > 0)

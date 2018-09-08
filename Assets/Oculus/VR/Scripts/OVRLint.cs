@@ -227,11 +227,6 @@ public class OVRLint : EditorWindow
 
 	static void CheckStaticCommonIssues()
 	{
-		if (OVRManager.IsUnityAlphaOrBetaVersion())
-		{
-			AddFix("General", OVRManager.UnityAlphaOrBetaVersionWarningMessage, null, null);
-		}
-
 		if (QualitySettings.anisotropicFiltering != AnisotropicFiltering.Enable && QualitySettings.anisotropicFiltering != AnisotropicFiltering.ForceEnable)
 		{
 			AddFix("Optimize Aniso", "Anisotropic filtering is recommended for optimal image sharpness and GPU performance.", delegate (UnityEngine.Object obj, bool last, int selected)
@@ -282,16 +277,6 @@ public class OVRLint : EditorWindow
 #endif
 			}, null, "Fix");
 		}
-
-#if UNITY_ANDROID
-		if (!PlayerSettings.use32BitDisplayBuffer)
-		{
-			AddFix("Optimize Display Buffer Format", "We recommend to enable use32BitDisplayBuffer.", delegate (UnityEngine.Object obj, bool last, int selected)
-			{
-				PlayerSettings.use32BitDisplayBuffer = true;
-			}, null, "Fix");
-		}
-#endif
 
 		BuildTargetGroup target = EditorUserBuildSettings.selectedBuildTargetGroup;
 		var tier = UnityEngine.Rendering.GraphicsTier.Tier1;

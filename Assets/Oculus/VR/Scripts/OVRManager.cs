@@ -786,33 +786,7 @@ public class OVRManager : MonoBehaviour
 	[Tooltip("If true, the Reset View in the universal menu will cause the pose to be reset. This should generally be enabled for applications with a stationary position in the virtual world and will allow the View Reset command to place the person back to a predefined location (such as a cockpit seat). Set this to false if you have a locomotion system because resetting the view would effectively teleport the player to potentially invalid locations.")]
     public bool AllowRecenter = true;
 
-	[SerializeField]
-	[Tooltip("Specifies HMD recentering behavior when controller recenter is performed. True recenters the HMD as well, false does not.")]
-	private bool _reorientHMDOnControllerRecenter = true;
-	/// <summary>
-	/// Defines the recentering mode specified in the tooltip above.
-	/// </summary>
-	public bool reorientHMDOnControllerRecenter
-	{
-		get
-		{
-			if (!isHmdPresent)
-				return false;
-
-			return OVRPlugin.GetReorientHMDOnControllerRecenter();
-		}
-
-		set
-		{
-			if (!isHmdPresent)
-				return;
-
-			OVRPlugin.SetReorientHMDOnControllerRecenter(value);
-
-		}
-	}
-
-	/// <summary>
+    /// <summary>
 	/// True if the current platform supports virtual reality.
 	/// </summary>
 	public bool isSupportedPlatform { get; private set; }
@@ -920,24 +894,6 @@ public class OVRManager : MonoBehaviour
 	}
 #endif
 
-	internal static bool IsUnityAlphaOrBetaVersion()
-	{
-		string ver = Application.unityVersion;
-		int pos = ver.Length - 1;
-		
-		while (pos >= 0 && ver[pos] >= '0' && ver[pos] <= '9')
-		{
-			--pos;
-		}
-
-		if (pos >= 0 && (ver[pos] == 'a' || ver[pos] == 'b'))
-			return true;
-
-		return false;
-	}
-
-	internal static string UnityAlphaOrBetaVersionWarningMessage = "WARNING: It's not recommended to use Unity alpha/beta release in Oculus development. Use a stable release if you encounter any issue.";
-
 #region Unity Messages
 
 	private void Awake()
@@ -957,13 +913,6 @@ public class OVRManager : MonoBehaviour
 				  "OVRPlugin v" + OVRPlugin.version + ", " +
 				  "SDK v" + OVRPlugin.nativeSDKVersion + ".");
 
-#if !UNITY_EDITOR
-		if (IsUnityAlphaOrBetaVersion())
-		{
-			Debug.LogWarning(UnityAlphaOrBetaVersionWarningMessage);
-		}
-#endif
-
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 		var supportedTypes =
 			UnityEngine.Rendering.GraphicsDeviceType.Direct3D11.ToString() + ", " +
@@ -975,19 +924,12 @@ public class OVRManager : MonoBehaviour
 
 		// Detect whether this platform is a supported platform
 		RuntimePlatform currPlatform = Application.platform;
-		if (currPlatform == RuntimePlatform.Android ||
-			// currPlatform == RuntimePlatform.LinuxPlayer ||
-			currPlatform == RuntimePlatform.OSXEditor ||
-			currPlatform == RuntimePlatform.OSXPlayer ||
-			currPlatform == RuntimePlatform.WindowsEditor ||
-			currPlatform == RuntimePlatform.WindowsPlayer)
-		{
-			isSupportedPlatform = true;
-		}
-		else
-		{
-			isSupportedPlatform = false;
-		}
+		isSupportedPlatform |= currPlatform == RuntimePlatform.Android;
+		//isSupportedPlatform |= currPlatform == RuntimePlatform.LinuxPlayer;
+		isSupportedPlatform |= currPlatform == RuntimePlatform.OSXEditor;
+		isSupportedPlatform |= currPlatform == RuntimePlatform.OSXPlayer;
+		isSupportedPlatform |= currPlatform == RuntimePlatform.WindowsEditor;
+		isSupportedPlatform |= currPlatform == RuntimePlatform.WindowsPlayer;
 		if (!isSupportedPlatform)
 		{
 			Debug.LogWarning("This platform is unsupported");
@@ -1081,8 +1023,6 @@ public class OVRManager : MonoBehaviour
 			tracker = new OVRTracker();
 		if (boundary == null)
 			boundary = new OVRBoundary();
-
-		reorientHMDOnControllerRecenter = _reorientHMDOnControllerRecenter;
 	}
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN

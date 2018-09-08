@@ -29,7 +29,7 @@ using UnityEngine;
 
 // Internal C# wrapper for OVRPlugin.
 
-public static class OVRPlugin
+internal static class OVRPlugin
 {
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
 	public const bool isSupportedPlatform = false;
@@ -40,7 +40,7 @@ public static class OVRPlugin
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
 	public static readonly System.Version wrapperVersion = _versionZero;
 #else
-	public static readonly System.Version wrapperVersion = OVRP_1_28_0.version;
+	public static readonly System.Version wrapperVersion = OVRP_1_27_0.version;
 #endif
 
 	private static System.Version _version;
@@ -222,13 +222,6 @@ public static class OVRPlugin
 		RTrackedRemote     = 0x02000000,
 		Active             = unchecked((int)0x80000000),
 		All                = ~None,
-	}
-
-	public enum Handedness
-	{
-		Unsupported           = 0,
-		LeftHanded            = 1,
-		RightHanded           = 2,
 	}
 
 	public enum TrackingOrigin
@@ -1510,21 +1503,13 @@ public static class OVRPlugin
 #endif
 	}
 
-	public static bool EnqueueSetupLayer(LayerDesc desc, int compositionDepth, IntPtr layerID)
+	public static bool EnqueueSetupLayer(LayerDesc desc, IntPtr layerID)
 	{
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
 		return false;
 #else
-		if (version >= OVRP_1_28_0.version)
-			return OVRP_1_28_0.ovrp_EnqueueSetupLayer2(ref desc, compositionDepth, layerID) == Result.Success;
-		else if (version >= OVRP_1_15_0.version)
-		{
-			if (compositionDepth != 0)
-			{
-				Debug.LogWarning("Use Oculus Plugin 1.28.0 or above to support non-zero compositionDepth");
-			}
+		if (version >= OVRP_1_15_0.version)
 			return OVRP_1_15_0.ovrp_EnqueueSetupLayer(ref desc, layerID) == Result.Success;
-		}
 
 		return false;
 #endif
@@ -2888,9 +2873,6 @@ public static class OVRPlugin
 	{
 		frustum = default(Frustumf2);
 
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-		return false;
-#else
 		if (version >= OVRP_1_15_0.version)
 		{
 			Result result = OVRP_1_15_0.ovrp_GetNodeFrustum2(nodeId, out frustum);
@@ -2907,16 +2889,13 @@ public static class OVRPlugin
 		{
 			return false;
 		}
-#endif
+
 	}
 
 	public static bool AsymmetricFovEnabled
 	{
 		get
 		{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-			return false;
-#else
 			if (version >= OVRP_1_21_0.version)
 			{
 				Bool asymmetricFovEnabled = Bool.False;
@@ -2935,7 +2914,6 @@ public static class OVRPlugin
 			{
 				return false;
 			}
-#endif
 		}
 	}
 
@@ -2943,9 +2921,6 @@ public static class OVRPlugin
 	{
 		get
 		{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-			return false;
-#else
 			if (version >= OVRP_1_15_0.version)
 			{
 				Bool enabled = Bool.False;
@@ -2956,68 +2931,9 @@ public static class OVRPlugin
 			{
 				return false;
 			}
-#endif
 		}
 	}
 
-
-	public static Handedness GetDominantHand()
-	{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-		return Handedness.Unsupported;
-#else
-		Handedness dominantHand;
-
-		if (version >= OVRP_1_28_0.version && OVRP_1_28_0.ovrp_GetDominantHand(out dominantHand) == Result.Success)
-		{
-			return dominantHand;
-		}
-
-		return Handedness.Unsupported;
-#endif
-	}
-
-	public static bool GetReorientHMDOnControllerRecenter()
-	{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-		return false;
-#else
-		Bool recenterMode;
-		if (version < OVRP_1_28_0.version || OVRP_1_28_0.ovrp_GetReorientHMDOnControllerRecenter(out recenterMode) != Result.Success)
-			return false;
-
-		return (recenterMode == Bool.True);
-#endif
-	}
-
-	public static bool SetReorientHMDOnControllerRecenter(bool recenterSetting)
-	{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-		return false;
-#else
-		Bool ovrpBoolRecenterSetting = recenterSetting ? Bool.True : Bool.False;
-		if (version < OVRP_1_28_0.version || OVRP_1_28_0.ovrp_SetReorientHMDOnControllerRecenter(ovrpBoolRecenterSetting) != Result.Success)
-			return false;
-
-		return true;
-#endif
-	}
-
-	public static bool SendEvent(string name, string param = "")
-	{
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
-		return false;
-#else
-		if (version >= OVRP_1_28_0.version)
-		{
-			return OVRP_1_28_0.ovrp_SendEvent(name, param) == Result.Success;
-		}
-		else
-		{
-			return false;
-		}
-#endif
-	}
 
 	private const string pluginName = "OVRPlugin";
 	private static System.Version _versionZero = new System.Version(0, 0, 0);
@@ -3586,24 +3502,9 @@ public static class OVRPlugin
 		public static extern Result ovrp_GetAppAsymmetricFov(out Bool useAsymmetricFov);
 	}
 
-	private static class OVRP_1_28_0
+	private static class OVRP_1_27_0
 	{
-		public static readonly System.Version version = new System.Version(1, 28, 0);
-
-		[DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Result ovrp_GetDominantHand(out Handedness dominantHand);
-
-		[DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Result ovrp_GetReorientHMDOnControllerRecenter(out Bool recenter);
-
-		[DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Result ovrp_SetReorientHMDOnControllerRecenter(Bool recenter);
-
-		[DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Result ovrp_SendEvent(string name, string param);
-
-		[DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Result ovrp_EnqueueSetupLayer2(ref LayerDesc desc, int compositionDepth, IntPtr layerId);
+		public static readonly System.Version version = new System.Version(1, 27, 0);
 	}
 
 #endif // !OVRPLUGIN_UNSUPPORTED_PLATFORM
