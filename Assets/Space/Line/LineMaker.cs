@@ -57,14 +57,10 @@ public class LineMaker : MonoBehaviour
             move.x *= -1.0f;
         }
         transform.Rotate(new Vector3(move.y, move.x, 0.0f));
-
-        AddLineProcess();
-        RemoveLineProcess();
     }
 
-    void AddLineProcess()
+    public void AddLine(Ray ray)
     {
-        Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
         //視点の先に星がなければフォーカス状態を解除してリターン
@@ -142,10 +138,9 @@ public class LineMaker : MonoBehaviour
         }
         return;
     }
-    
-    void RemoveLineProcess()
+
+    public void RemoveLine(Ray ray)
     {
-        Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
         //視点の先に線があれば
