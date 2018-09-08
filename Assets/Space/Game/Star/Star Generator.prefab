@@ -56,3 +56,5 @@ MonoBehaviour:
   mRadius: 100
   mStarPrefab: {fileID: 4508652521449928, guid: 1230d5216d3485a4d9b7f97f8e15faf2,
     type: 2}
+  mStarRadius: 0.7
+  mStarRadiusVariance: 0.25

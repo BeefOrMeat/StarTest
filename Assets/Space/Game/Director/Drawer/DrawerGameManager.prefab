@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4702372556250428}
   - component: {fileID: 114974099660154318}
   m_Layer: 0
-  m_Name: DrawerGameDirector
+  m_Name: DrawerGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,3 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd2e9d15295c904181b09d4e633c96e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mCameraControllerPrefab: {fileID: 4496777158650134, guid: 2ccbdc7d8bdfc4a42bc871352fa3f11f,
+    type: 2}

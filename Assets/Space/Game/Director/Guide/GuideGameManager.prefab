@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4047499647181186}
   - component: {fileID: 114099504336098952}
   m_Layer: 0
-  m_Name: GuideGameDirector
+  m_Name: GuideGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,3 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b2dd0f1855d51940ae72a5595103012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mCameraControllerPrefab: {fileID: 4911227523916554, guid: ef10fc1d574532645bf3a69fba8fce97,
+    type: 2}
