@@ -17,7 +17,36 @@ public class StarGenerator : MonoBehaviour
     [SerializeField]
     private Transform mStarPrefab;
 
+    [SerializeField]
+    private float mStarRadius = 1.0f;
+
+    [SerializeField]
+    private float mStarRadiusVariance = 0.5f;
+
     private List<Star> mStarList = new List<Star>();
+
+    private bool mGenerated;
+    private int mSeed = -1;
+
+    public void SetSeed(int seed)
+    {
+        mSeed = seed;
+    }
+
+    private void Update()
+    {
+        if (mGenerated)
+        {
+            return;
+        }
+        if (mSeed == -1)
+        {
+            return;
+        }
+        Random.InitState(mSeed);
+        GenerateStars();
+        mGenerated = true;
+    }
 
     private bool StarCollision(Vector3 aPos, float ar, Vector3 bPos, float br)
     {
@@ -27,7 +56,7 @@ public class StarGenerator : MonoBehaviour
         return rx * rx + ry * ry + rz * rz <= ar * br;
     }
 
-    void Start ()
+    private void GenerateStars ()
     {
         //星が重なってる場合でも10回試してダメだったらあきらめて重なって表示する
         for (int i = 0; i < mStarCount; ++i)
@@ -43,13 +72,16 @@ public class StarGenerator : MonoBehaviour
                 float z = Random.Range(-1.0f, 1.0f);
                 star.position = new Vector3(x, y, z).normalized * mRadius;
 
+                float scale = mStarRadius + Random.Range(-mStarRadiusVariance, mStarRadiusVariance);
+                star.localScale = Vector3.one * scale;
+
                 //既にある星と重なるか判定する
                 bool overlaped = false;
                 foreach (Star generatedStarScript in mStarList)
                 {
                     if (StarCollision(
-                        starScript.transform.position, starScript.Radius,
-                        generatedStarScript.transform.position, generatedStarScript.Radius
+                        starScript.transform.position, starScript.Radius * scale,
+                        generatedStarScript.transform.position, generatedStarScript.Radius * scale
                         ))
                     {
                         overlaped = true;
@@ -65,9 +97,5 @@ public class StarGenerator : MonoBehaviour
             mStarList.Add(starScript);
         }
     }
-	
-	void Update ()
-    {
-		
-	}
+
 }

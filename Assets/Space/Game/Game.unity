@@ -234,11 +234,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 90951856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cd2e9d15295c904181b09d4e633c96e, type: 3}
+  m_Script: {fileID: 11500000, guid: a748cb0f19cd707458969e182029d1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mStarGeneratorPrefab: {fileID: 0}
-  mCanvasPrefab: {fileID: 0}
+  mDrawerGameDirectorPrefab: {fileID: 4702372556250428, guid: 264ef111eab98df408580eef12fc1ca6,
+    type: 2}
+  mGuideGameDirectorPrefab: {fileID: 4047499647181186, guid: 0ec7b142ebdfcc1469050777e2a5654c,
+    type: 2}
+  mCanvasPrefab: {fileID: 224119844117033558, guid: 9c746b8f3ae6c0e438889fe522cb9c79,
+    type: 2}
+  mStarGeneratorPrefab: {fileID: 4770178998470958, guid: c60d1545a91d18f46a148f23228123f7,
+    type: 2}
   mMaxTime: 30
 --- !u!1 &314796069
 GameObject:
@@ -338,8 +344,6 @@ MonoBehaviour:
     type: 2}
   mLineWidth: 0.25
   mLineColliderWidthRate: 10
-  mXReverse: 0
-  mYReverse: 0
 --- !u!1 &1165380009
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,65 +409,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -10.88, y: -30, z: 0}
---- !u!1 &2091041163
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 2091041166}
-  - component: {fileID: 2091041165}
-  - component: {fileID: 2091041164}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2091041164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2091041163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &2091041165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2091041163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 5
---- !u!4 &2091041166
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2091041163}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

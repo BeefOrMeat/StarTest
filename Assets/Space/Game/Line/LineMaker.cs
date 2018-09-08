@@ -12,16 +12,8 @@ public class LineMaker : MonoBehaviour
     [SerializeField]
     private float mLineColliderWidthRate = 1.0f;
 
-    [SerializeField]
-    private bool mXReverse = false;
-
-    [SerializeField]
-    private bool mYReverse = false;
-
     private GameObject mSelectedStar;
     private GameObject mFocusedStar;
-
-    private Vector3 mOldMousePosition;
 
     private Transform mNextLine;
     private GameObject mFocusedLine;
@@ -30,6 +22,13 @@ public class LineMaker : MonoBehaviour
 
     private int mStarLayerMask;
     private int mLineLayerMask;
+
+#if UNITY_EDITOR 
+    private bool mXReverse = false;
+    private bool mYReverse = false;
+    private float mMoveX;
+    private float mMoveY;
+#endif
 
     // Use this for initialization
     void Start ()
@@ -44,9 +43,8 @@ public class LineMaker : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Vector3 mousePosition = Input.mousePosition;
-        Vector3 move = mousePosition - mOldMousePosition;
-        mOldMousePosition = mousePosition;
+#if UNITY_EDITOR
+        Vector3 move = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         if (mXReverse)
         {
             move.y *= -1.0f;
@@ -55,15 +53,26 @@ public class LineMaker : MonoBehaviour
         {
             move.x *= -1.0f;
         }
-        transform.Rotate(new Vector3(move.y, move.x, 0.0f));
+        mMoveX += move.x * 0.05f;
+        mMoveY += move.y * 0.05f;
 
-        AddLineProcess();
-        RemoveLineProcess();
+        mMoveY = Mathf.Clamp(mMoveY, -Mathf.PI, Mathf.PI);
+        Vector3 lookAtPos = Vector3.zero;
+        float rad = mMoveX + Mathf.PI * 0.5f;
+        lookAtPos.x = Mathf.Cos(rad);
+        lookAtPos.z = Mathf.Sin(rad);
+        lookAtPos *= 10.0f;
+
+        transform.LookAt(lookAtPos);
+        transform.Rotate(new Vector3(mMoveY * Mathf.Rad2Deg, 0.0f, 0.0f));
+#endif
+        Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+        AddLine(ray);
+        RemoveLine(ray);
     }
 
-    void AddLineProcess()
+    public void AddLine(Ray ray)
     {
-        Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
         //視点の先に星がなければフォーカス状態を解除してリターン
@@ -142,9 +151,8 @@ public class LineMaker : MonoBehaviour
         return;
     }
     
-    void RemoveLineProcess()
+    public void RemoveLine(Ray ray)
     {
-        Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
 
         //視点の先に線があれば
