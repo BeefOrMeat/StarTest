@@ -29,7 +29,6 @@ public class LineMaker : MonoBehaviour
     private Camera mCamera;
 
     private int mStarLayerMask;
-
     private int mLineLayerMask;
 
     // Use this for initialization

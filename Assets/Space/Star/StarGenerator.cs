@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StarGenerator : MonoBehaviour
-{
-
+{ 
     [SerializeField]
     private int mStarCount;
 
