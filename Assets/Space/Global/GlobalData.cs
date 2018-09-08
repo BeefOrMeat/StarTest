@@ -10,6 +10,6 @@ public enum Role
 
 public class GlobalData
 {
-    public static Role role = Role.Guide;
-    //public static Role role = Role.Drawer;
+    //public static Role role = Role.Guide;
+    public static Role role = Role.Drawer;
 }
