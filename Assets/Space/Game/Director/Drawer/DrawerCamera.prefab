@@ -175,6 +175,7 @@ MonoBehaviour:
     type: 2}
   mLineWidth: 0.25
   mLineColliderWidthRate: 10
+  mLinePadding: 2
 --- !u!114 &114372026582879562
 MonoBehaviour:
   m_ObjectHideFlags: 1

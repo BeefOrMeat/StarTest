@@ -11,6 +11,8 @@ public class LineMaker : MonoBehaviour
     private float mLineWidth = 0.5f;
     [SerializeField]
     private float mLineColliderWidthRate = 1.0f;
+    [SerializeField]
+    private float mLinePadding = 0.5f;
 
     private GameObject mSelectedStar;
     private GameObject mFocusedStar;
@@ -122,7 +124,7 @@ public class LineMaker : MonoBehaviour
                     mNextLine.gameObject.SetActive(true);
                     float distance = Vector3.Distance(mFocusedStar.transform.position, mSelectedStar.transform.position);
                     mNextLine.position = mSelectedStar.transform.position;
-                    mNextLine.localScale = new Vector3(mNextLine.localScale.x, mNextLine.localScale.y, distance);
+                    mNextLine.localScale = new Vector3(mNextLine.localScale.x, mNextLine.localScale.y, distance - mLinePadding * 2.0f);
                     mNextLine.LookAt(mFocusedStar.transform.position);
                     mNextLine.Translate(new Vector3(0, 0, distance * 0.5f));
                 }
