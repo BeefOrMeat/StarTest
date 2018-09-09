@@ -20,10 +20,12 @@ public class ConstellationMaker : MonoBehaviour
     private Transform mNextLine;
     private GameObject mFocusedLine;
 
-    private Camera mCamera;
 
     private int mStarLayerMask;
     private int mLineLayerMask;
+
+    [SerializeField]
+    private Camera mCamera;
 
 #if UNITY_EDITOR 
     private bool mXReverse = false;
@@ -35,7 +37,6 @@ public class ConstellationMaker : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        mCamera = GetComponent<Camera>();
         int starLayerNo = LayerMask.NameToLayer("Star");
         mStarLayerMask = 1 << starLayerNo;
         int lineLayerNo = LayerMask.NameToLayer("Line");
@@ -65,12 +66,13 @@ public class ConstellationMaker : MonoBehaviour
         lookAtPos.z = Mathf.Sin(rad);
         lookAtPos *= 10.0f;
 
-        transform.LookAt(lookAtPos);
-        transform.Rotate(new Vector3(mMoveY * Mathf.Rad2Deg, 0.0f, 0.0f));
-#endif
+        mCamera.transform.LookAt(lookAtPos);
+        mCamera.transform.Rotate(new Vector3(mMoveY * Mathf.Rad2Deg, 0.0f, 0.0f));
+
         Ray ray = mCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
         AddLine(ray);
         RemoveLine(ray);
+#endif
     }
 
     public void AddLine(Ray ray)
@@ -157,10 +159,12 @@ public class ConstellationMaker : MonoBehaviour
         //同じ星を選択した場合
         else
         {
-            Star selectedStarScript = mSelectedStar.GetComponent<Star>();
-            selectedStarScript.OnReleased();
-
-            mSelectedStar = null;
+            if (mSelectedStar)
+            {
+                Star selectedStarScript = mSelectedStar.GetComponent<Star>();
+                selectedStarScript.OnReleased();
+                mSelectedStar = null;
+            }
         }
         //シミュレート線を非表示に
         if (mNextLine)
