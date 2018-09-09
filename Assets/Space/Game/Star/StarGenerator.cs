@@ -33,6 +33,18 @@ public class StarGenerator : MonoBehaviour
         mSeed = seed;
     }
 
+    public void AddConstellation(ConstellationData data)
+    {
+        List<Star> stars = data.GetChildrenStars();
+        foreach (Star star in stars)
+        {
+            star.transform.SetParent(null);
+            star.Radius = mStarColliderRadius;
+
+            mStarList.Add(star);
+        }
+    }
+
     private void Update()
     {
         if (mGenerated)
@@ -63,8 +75,6 @@ public class StarGenerator : MonoBehaviour
         {
             int limit = 10;
             Transform star = Instantiate(mStarPrefab);
-            Star starScript = star.GetComponent<Star>();
-            starScript.Radius = mStarColliderRadius;
             while (limit > 0)
             {
                 float x = Random.Range(-1.0f, 1.0f);
@@ -72,16 +82,13 @@ public class StarGenerator : MonoBehaviour
                 float z = Random.Range(-1.0f, 1.0f);
                 star.position = new Vector3(x, y, z).normalized * mRadius;
 
-                float scale = mStarRadius + Random.Range(-mStarRadiusVariance, mStarRadiusVariance);
-                star.localScale = Vector3.one * scale;
-
                 //既にある星と重なるか判定する
                 bool overlaped = false;
                 foreach (Star generatedStarScript in mStarList)
                 {
                     if (StarCollision(
-                        starScript.transform.position, starScript.Radius * scale,
-                        generatedStarScript.transform.position, generatedStarScript.Radius * scale
+                        star.transform.position, mStarColliderRadius,
+                        generatedStarScript.transform.position, mStarColliderRadius
                         ))
                     {
                         overlaped = true;
@@ -94,7 +101,16 @@ public class StarGenerator : MonoBehaviour
                 }
                 --limit;
             }
+            Star starScript = star.GetComponent<Star>();
             mStarList.Add(starScript);
+        }
+
+        //星の大きさにばらつきを作る
+        foreach (Star star in mStarList)
+        {
+            float scale = mStarRadius + Random.Range(-mStarRadiusVariance, mStarRadiusVariance);
+            star.transform.localScale = Vector3.one * scale;
+            star.Radius = mStarColliderRadius;
         }
     }
 

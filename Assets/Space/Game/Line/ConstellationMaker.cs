@@ -8,11 +8,14 @@ public class ConstellationMaker : MonoBehaviour
     private Transform mLinePrefab;
 
     [SerializeField]
-    private float mLineWidth = 0.5f;
+    private float mLineWidth = 0.25f;
     [SerializeField]
-    private float mLineColliderWidthRate = 1.0f;
+    private float mLineColliderWidthRate = 40.0f;
     [SerializeField]
-    private float mLinePadding = 0.5f;
+    private float mLinePadding = 2.0f;
+
+    [SerializeField]
+    private Transform mConstellationPrefab;
 
     private GameObject mSelectedStar;
     private GameObject mFocusedStar;
@@ -20,12 +23,17 @@ public class ConstellationMaker : MonoBehaviour
     private Transform mNextLine;
     private GameObject mFocusedLine;
 
-
     private int mStarLayerMask;
     private int mLineLayerMask;
 
     [SerializeField]
     private Camera mCamera;
+
+    private List<ConstellationData> mConstellations = new List<ConstellationData>();
+    private ConstellationData mEditConstellation;
+
+    private HashSet<Transform> mTargetStars = new HashSet<Transform>();
+    private HashSet<Transform> mTargetLines = new HashSet<Transform>();
 
 #if UNITY_EDITOR 
     private bool mXReverse = false;
@@ -41,10 +49,11 @@ public class ConstellationMaker : MonoBehaviour
         mStarLayerMask = 1 << starLayerNo;
         int lineLayerNo = LayerMask.NameToLayer("Line");
         mLineLayerMask = 1 << lineLayerNo;
+        NextConstellation();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update ()
     {
 #if UNITY_EDITOR
         Vector3 move = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -79,8 +88,19 @@ public class ConstellationMaker : MonoBehaviour
     {
         RaycastHit hit;
 
+        bool hited = false;
+
         //視点の先に星がなければフォーカス状態を解除してリターン
-        if (!Physics.Raycast(ray, out hit, 10000, mStarLayerMask))
+        if (Physics.Raycast(ray, out hit, 10000, mStarLayerMask))
+        {
+            //ルートにある星以外は星座に属しているので選択できない
+            if (!hit.collider.transform.parent)
+            {
+                hited = true;
+            }
+        }
+
+        if (!hited)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -151,6 +171,12 @@ public class ConstellationMaker : MonoBehaviour
 
                 Star focusedStarScript = mFocusedStar.GetComponent<Star>();
                 focusedStarScript.OnSelected();
+
+                //線を構成する星と線を星座として登録
+                mTargetStars.Add(mSelectedStar.transform);
+                mTargetStars.Add(mFocusedStar.transform);
+                mTargetLines.Add(mNextLine);
+
                 //線をシミュレートしてる位置で固定する
                 mNextLine = null;
             }
@@ -230,5 +256,22 @@ public class ConstellationMaker : MonoBehaviour
         Line oldFocusedLineScript = mFocusedLine.GetComponent<Line>();
         oldFocusedLineScript.OnReleased();
         mFocusedLine = null;
+    }
+
+    public void NextConstellation()
+    {
+        if (mEditConstellation)
+        {
+            foreach (Transform star in mTargetStars)
+            {
+                mEditConstellation.AddStar(star);
+            }
+            foreach (Transform line in mTargetLines)
+            {
+                mEditConstellation.AddLine(line);
+            }
+            mConstellations.Add(mEditConstellation);
+        }
+        mEditConstellation = Instantiate(mConstellationPrefab).GetComponent<ConstellationData>();
     }
 }

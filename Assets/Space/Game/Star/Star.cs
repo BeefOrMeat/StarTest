@@ -24,7 +24,7 @@ public class Star : MonoBehaviour
         mRenderer.material = mDefaultMaterial;
 
         SphereCollider collider = GetComponent<SphereCollider>();
-        collider.radius *= Radius;
+        collider.radius = 0.5f * Radius;
 	}
 	
 	// Update is called once per frame

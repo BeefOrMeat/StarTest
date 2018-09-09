@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a748cb0f19cd707458969e182029d1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mDatasPrefab: {fileID: 4073818686144748, guid: af4d1cd873ff74d4c88c8ecaec8ff712,
+    type: 2}
   mDrawerGameManagerPrefab: {fileID: 4702372556250428, guid: 264ef111eab98df408580eef12fc1ca6,
     type: 2}
   mGuideGameManagerPrefab: {fileID: 4047499647181186, guid: 0ec7b142ebdfcc1469050777e2a5654c,

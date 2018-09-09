@@ -524,7 +524,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294901759
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -560,7 +560,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294901759
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -596,7 +596,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294901759
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -963,9 +963,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mLinePrefab: {fileID: 4465323785528026, guid: f51b04bd839ed9a4ca2cd71d42f66ec2,
     type: 2}
-  mLineWidth: 0.5
-  mLineColliderWidthRate: 1
-  mLinePadding: 0.5
+  mLineWidth: 0.25
+  mLineColliderWidthRate: 40
+  mLinePadding: 2
+  mConstellationPrefab: {fileID: 4626467446122084, guid: ed0b4ab95d303bf4884943e1ecede46a,
+    type: 2}
   mCamera: {fileID: 20924087503002220}
 --- !u!114 &114168387939147124
 MonoBehaviour:

@@ -37,7 +37,7 @@ public class ConstellationData : MonoBehaviour
         }
     }
 
-    private List<Star> GetChildrenStars()
+    public List<Star> GetChildrenStars()
     {
         List<Star> stars = new List<Star>();
         foreach (Transform child in transform)
@@ -50,6 +50,21 @@ public class ConstellationData : MonoBehaviour
             stars.Add(star);
         }
         return stars;
+    }
+
+    public List<Line> GetChildrenLines()
+    {
+        List<Line> lines = new List<Line>();
+        foreach (Transform child in transform)
+        {
+            Line star = child.GetComponent<Line>();
+            if (!star)
+            {
+                continue;
+            }
+            lines.Add(star);
+        }
+        return lines;
     }
 
     public void AddStar()
