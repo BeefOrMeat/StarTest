@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class TitleController : MonoBehaviour {
 
@@ -23,7 +24,7 @@ public class TitleController : MonoBehaviour {
         //audioSource.PlayOneShot(audioClip[0]);
         //Application.LoadLevel("select");
         //StartCoroutine("GoToSelect");
-		Application.LoadLevel("Contact");
+        Application.LoadLevel( "Game" );
     }
 
 }
