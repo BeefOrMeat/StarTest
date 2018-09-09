@@ -35,7 +35,7 @@ public class ConstellationMaker : MonoBehaviour
     private HashSet<Transform> mTargetStars = new HashSet<Transform>();
     private HashSet<Transform> mTargetLines = new HashSet<Transform>();
 
-#if UNITY_EDITOR 
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_MAC
     private bool mXReverse = false;
     private bool mYReverse = false;
     private float mMoveX;
@@ -55,7 +55,7 @@ public class ConstellationMaker : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_MAC
         Vector3 move = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         if (mXReverse)
         {

@@ -164,6 +164,7 @@ MonoBehaviour:
   mStarGeneratorPrefab: {fileID: 4770178998470958, guid: c60d1545a91d18f46a148f23228123f7,
     type: 2}
   mMaxTime: 30
+  mRenderTexture: {fileID: 8400000, guid: 2fbc7a5463f2de045ba0d061b43e6dc5, type: 2}
 --- !u!1 &1165380009
 GameObject:
   m_ObjectHideFlags: 0
