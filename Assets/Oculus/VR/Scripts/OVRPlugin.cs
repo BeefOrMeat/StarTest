@@ -2872,7 +2872,7 @@ internal static class OVRPlugin
 	public static bool GetNodeFrustum2(Node nodeId, out Frustumf2 frustum)
 	{
 		frustum = default(Frustumf2);
-
+#if !OVRPLUGIN_UNSUPPORTED_PLATFORM
 		if (version >= OVRP_1_15_0.version)
 		{
 			Result result = OVRP_1_15_0.ovrp_GetNodeFrustum2(nodeId, out frustum);
@@ -2885,7 +2885,8 @@ internal static class OVRPlugin
 				return true;
 			}
 		}
-		else
+	else
+#endif
 		{
 			return false;
 		}
@@ -2896,6 +2897,7 @@ internal static class OVRPlugin
 	{
 		get
 		{
+#if !OVRPLUGIN_UNSUPPORTED_PLATFORM
 			if (version >= OVRP_1_21_0.version)
 			{
 				Bool asymmetricFovEnabled = Bool.False;
@@ -2910,7 +2912,8 @@ internal static class OVRPlugin
 					return asymmetricFovEnabled == Bool.True;
 				}
 			}
-			else
+	else
+	#endif
 			{
 				return false;
 			}
@@ -2921,13 +2924,15 @@ internal static class OVRPlugin
 	{
 		get
 		{
+#if !OVRPLUGIN_UNSUPPORTED_PLATFORM
 			if (version >= OVRP_1_15_0.version)
 			{
 				Bool enabled = Bool.False;
 				enabled = OVRP_1_15_0.ovrp_GetEyeTextureArrayEnabled();
 				return enabled == Bool.True;
 			}
-			else
+	else
+	#endif
 			{
 				return false;
 			}
