@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LineMaker : MonoBehaviour
+public class ConstellationMaker : MonoBehaviour
 {
     [SerializeField]
     private Transform mLinePrefab;

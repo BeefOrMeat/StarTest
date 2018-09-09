@@ -58,6 +58,11 @@ public class ConstellationData : MonoBehaviour
         star.name = star.name + "(" + GetChildrenStars().Count() + ")";
     }
 
+    public void AddStar(Transform star)
+    {
+        star.SetParent(transform);
+    }
+
     public void AddLine(float lineWidth, float linePadding)
     {
         if (!mLineBegin || !mLineEnd)
@@ -73,5 +78,10 @@ public class ConstellationData : MonoBehaviour
         line.LookAt(mLineBegin.transform.position);
         line.Translate(new Vector3(0, 0, distance * 0.5f));
     }
-	
+
+    public void AddLine(Transform line)
+    {
+        line.SetParent(transform);
+    }
+
 }
