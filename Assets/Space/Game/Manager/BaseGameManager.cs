@@ -9,6 +9,9 @@ public abstract class BaseGameManager : MonoBehaviour
     [SerializeField]
     private Transform mCameraControllerPrefab;
 
+    [SerializeField]
+    private Transform mDebugCameraControllerPrefab;
+
     protected abstract void OnStart();
     protected abstract void OnUpdate();
 
@@ -16,7 +19,18 @@ public abstract class BaseGameManager : MonoBehaviour
     {
         mGameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
 
+#if UNITY_EDITOR
+        if (mDebugCameraControllerPrefab)
+        {
+            Instantiate(mDebugCameraControllerPrefab);
+        }
+        else
+        {
+            Instantiate(mCameraControllerPrefab);
+        }
+#else
         Instantiate(mCameraControllerPrefab);
+#endif
 
         OnStart();
     }
