@@ -23,7 +23,7 @@ public class TitleController : MonoBehaviour {
         //audioSource.PlayOneShot(audioClip[0]);
         //Application.LoadLevel("select");
         //StartCoroutine("GoToSelect");
-		Application.LoadLevel("Contact");
+		Application.LoadLevel("Game");
     }
 
 }
